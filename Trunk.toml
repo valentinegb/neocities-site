@@ -1,2 +1,22 @@
 [build]
 filehash = false
+
+[[hooks]]
+stage = "post_build"
+command = "mv"
+command_arguments = [
+    "dist/.stage/neocities_site_bg.wasm",
+    "dist/.stage/neocities_site_bg.txt",
+]
+
+[[hooks]]
+stage = "post_build"
+command = "sed"
+command_arguments = [
+    "-i",
+    "",
+    "-e",
+    "s/neocities_site_bg.wasm/neocities_site_bg.txt/g",
+    "dist/.stage/index.html",
+    "dist/.stage/neocities_site.js",
+]
