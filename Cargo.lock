@@ -164,6 +164,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "build_timestamp"
+version = "0.1.0"
+
+[[package]]
 name = "bumpalo"
 version = "3.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -254,6 +258,15 @@ name = "cfg_aliases"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
+
+[[package]]
+name = "chrono"
+version = "0.4.39"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7e36cc9d416881d2e24f9a963be5fb1cd90966419ac844274161d10488b3e825"
+dependencies = [
+ "num-traits",
+]
 
 [[package]]
 name = "clipboard-win"
@@ -1058,6 +1071,8 @@ dependencies = [
 name = "neocities_site"
 version = "0.1.0"
 dependencies = [
+ "build_timestamp",
+ "chrono",
  "eframe",
  "egui",
  "log",

@@ -1,81 +1,67 @@
-pub struct TemplateApp {
-    label: String,
-    value: f32,
+use build_timestamp::build_timestamp;
+use chrono::DateTime;
+use eframe::App;
+use egui::{
+    text::LayoutJob, warn_if_debug_build, Align, CentralPanel, FontSelection, RichText,
+    TopBottomPanel,
+};
+
+pub struct NeocitiesSiteApp {
+    about_window_open: bool,
 }
 
-impl Default for TemplateApp {
+impl Default for NeocitiesSiteApp {
     fn default() -> Self {
         Self {
-            // Example stuff:
-            label: "Hello World!".to_owned(),
-            value: 2.7,
+            about_window_open: true,
         }
     }
 }
 
-impl TemplateApp {
-    /// Called once before the first frame.
-    pub fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-        // This is also where you can customize the look and feel of egui using
-        // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
-
-        Default::default()
-    }
-}
-
-impl eframe::App for TemplateApp {
-    /// Called each time the UI needs repainting, which may be many times per second.
+impl App for NeocitiesSiteApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Put your widgets into a `SidePanel`, `TopBottomPanel`, `CentralPanel`, `Window` or `Area`.
-        // For inspiration and more examples, go to https://emilk.github.io/egui
+        egui::Window::new("Why does this website suck so much?").open(&mut self.about_window_open).show(ctx, |ui| {
+            let mut layout_job = LayoutJob::default();
 
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
-            // The top panel is often a good place for a menu bar:
+            RichText::new("I don't really like web dev, but I thought making a Neocities site would be cool. So, what, I just sucked it up and programmed in ").append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("*shudder* ").weak().append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("JavaScript? ").italics().append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("No, of course not! I used ").append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("Rust ").strong().append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("instead, which some may say is overengineering but I think this was ").append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("way ").italics().append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            RichText::new("easier than trying to decipher the nonsensical errors from a language without static typing.").append_to(&mut layout_job, ui.style(), FontSelection::Default, Align::Min);
+            ui.label(layout_job);
+        });
+        TopBottomPanel::bottom("footer").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                warn_if_debug_build(ui);
 
-            egui::menu::bar(ui, |ui| {
-                egui::widgets::global_theme_preference_buttons(ui);
+                let mut layout_job = LayoutJob::default();
+
+                RichText::new("Last updated ").append_to(
+                    &mut layout_job,
+                    ui.style(),
+                    FontSelection::Default,
+                    Align::Min,
+                );
+                RichText::new(
+                    DateTime::from_timestamp(build_timestamp!(), 0)
+                        .unwrap()
+                        .to_string(),
+                )
+                .strong()
+                .append_to(
+                    &mut layout_job,
+                    ui.style(),
+                    FontSelection::Default,
+                    Align::Min,
+                );
+                ui.label(layout_job);
             });
         });
-
-        egui::CentralPanel::default().show(ctx, |ui| {
-            // The central panel the region left after adding TopPanel's and SidePanel's
-            ui.heading("eframe template");
-
-            ui.horizontal(|ui| {
-                ui.label("Write something: ");
-                ui.text_edit_singleline(&mut self.label);
-            });
-
-            ui.add(egui::Slider::new(&mut self.value, 0.0..=10.0).text("value"));
-            if ui.button("Increment").clicked() {
-                self.value += 1.0;
-            }
-
-            ui.separator();
-
-            ui.add(egui::github_link_file!(
-                "https://github.com/valentinegb/neocities-site/blob/main/",
-                "Source code."
-            ));
-
-            ui.with_layout(egui::Layout::bottom_up(egui::Align::LEFT), |ui| {
-                powered_by_egui_and_eframe(ui);
-                egui::warn_if_debug_build(ui);
-            });
+        CentralPanel::default().show(ctx, |_ui| {
+            // TODO
         });
     }
-}
-
-fn powered_by_egui_and_eframe(ui: &mut egui::Ui) {
-    ui.horizontal(|ui| {
-        ui.spacing_mut().item_spacing.x = 0.0;
-        ui.label("Powered by ");
-        ui.hyperlink_to("egui", "https://github.com/emilk/egui");
-        ui.label(" and ");
-        ui.hyperlink_to(
-            "eframe",
-            "https://github.com/emilk/egui/tree/master/crates/eframe",
-        );
-        ui.label(".");
-    });
 }
