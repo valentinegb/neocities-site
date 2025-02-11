@@ -2,7 +2,7 @@ use build_timestamp::build_timestamp;
 use chrono::DateTime;
 use eframe::App;
 use egui::{
-    text::LayoutJob, warn_if_debug_build, Align, CentralPanel, FontSelection, RichText,
+    text::LayoutJob, warn_if_debug_build, Align, CentralPanel, FontSelection, Layout, RichText,
     TopBottomPanel,
 };
 
@@ -35,8 +35,6 @@ impl App for NeocitiesSiteApp {
         });
         TopBottomPanel::bottom("footer").show(ctx, |ui| {
             ui.horizontal(|ui| {
-                warn_if_debug_build(ui);
-
                 let mut layout_job = LayoutJob::default();
 
                 RichText::new("Last updated ").append_to(
@@ -58,10 +56,12 @@ impl App for NeocitiesSiteApp {
                     Align::Min,
                 );
                 ui.label(layout_job);
+                warn_if_debug_build(ui);
+                ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    ui.toggle_value(&mut self.about_window_open, "About");
+                });
             });
         });
-        CentralPanel::default().show(ctx, |_ui| {
-            // TODO
-        });
+        CentralPanel::default().show(ctx, |_ui| {});
     }
 }
