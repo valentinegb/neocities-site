@@ -1,14 +1,9 @@
 [build]
-filehash = false
 no_sri = true
 
 [[hooks]]
 stage = "post_build"
-command = "mv"
-command_arguments = [
-    "dist/.stage/neocities_site_bg.wasm",
-    "dist/.stage/neocities_site_bg.txt",
-]
+command = "./rename_wasm.sh"
 
 [[hooks]]
 stage = "post_build"
@@ -17,7 +12,6 @@ command_arguments = [
     "-i",
     "",
     "-e",
-    "s/neocities_site_bg.wasm/neocities_site_bg.txt/g",
+    "s/_bg.wasm/_bg.txt/g",
     "dist/.stage/index.html",
-    "dist/.stage/neocities_site.js",
 ]
