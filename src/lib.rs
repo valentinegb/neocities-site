@@ -5,8 +5,8 @@ use build_timestamp::build_timestamp;
 use chrono::DateTime;
 use eframe::{App, CreationContext};
 use egui::{
-    text::LayoutJob, warn_if_debug_build, Align, CentralPanel, Color32, FontSelection, Layout,
-    Response, RichText, TopBottomPanel, Ui,
+    text::LayoutJob, warn_if_debug_build, Align, CentralPanel, Color32, FontSelection, Hyperlink,
+    Layout, Response, RichText, TopBottomPanel, Ui,
 };
 use fonts::{font_definitions, RichTextExt as _};
 use rich_text_md::rich_text_md;
@@ -49,6 +49,13 @@ impl App for NeocitiesSiteApp {
                 col_3.with_layout(Layout::right_to_left(Align::Center), |ui| {
                     ui.toggle_value(&mut self.about_window_open, "About");
                     ui.toggle_value(&mut self.fonts_window_open, "Fonts");
+                    ui.add(
+                        Hyperlink::from_label_and_url(
+                            "Source Code",
+                            "https://github.com/valentinegb/neocities-site",
+                        )
+                        .open_in_new_tab(true),
+                    );
                 });
             });
         });
