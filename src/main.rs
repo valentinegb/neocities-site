@@ -20,7 +20,7 @@ fn main() {
             .start(
                 canvas,
                 web_options,
-                Box::new(|_cc| Ok(Box::new(neocities_site::NeocitiesSiteApp::default()))),
+                Box::new(|cc| Ok(Box::new(neocities_site::NeocitiesSiteApp::new(cc)))),
             )
             .await;
 
