@@ -17,7 +17,7 @@ pub fn rich_text_md(item: TokenStream) -> TokenStream {
             Event::Start(tag) => current_tag = Some(tag),
             Event::End(_) => current_tag = None,
             Event::Text(text) => {
-                output += &format!("\negui::RichText::new({:?})", &*text);
+                output += &format!("\negui::RichText::new(format!({:?}))", &*text);
 
                 if let Some(current_tag) = &current_tag {
                     match current_tag {
