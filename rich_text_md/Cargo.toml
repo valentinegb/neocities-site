@@ -1,0 +1,12 @@
+[package]
+name = "rich_text_md"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+proc-macro = true
+
+[dependencies]
+pulldown-cmark = "0.13.0"
+syn = { version = "2.0.98", default-features = false, features = ["parsing"] }

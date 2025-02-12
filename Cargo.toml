@@ -16,5 +16,6 @@ web-sys = "0.3.77"
 wgpu = { version = "*", features = ["webgpu", "webgl"] }
 build_timestamp = { path = "build_timestamp" }
 chrono = { version = "0.4.39", default-features = false }
+rich_text_md = { path = "rich_text_md" }
 
 [workspace]
