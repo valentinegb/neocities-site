@@ -1,5 +1,6 @@
 [build]
 filehash = false
+no_sri = true
 
 [[hooks]]
 stage = "post_build"
