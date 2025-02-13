@@ -24,6 +24,12 @@ pub fn font_definitions() -> FontDefinitions {
     let mut font_definitions = FontDefinitions::default();
 
     font_definitions.font_data.insert(
+        "IBMPlexMath-Regular".to_owned(),
+        Arc::new(FontData::from_static(include_bytes!(
+            "../assets/fonts/IBMPlexMath-Regular.ttf"
+        ))),
+    );
+    font_definitions.font_data.insert(
         "IBMPlexMono-Regular".to_owned(),
         Arc::new(FontData::from_static(include_bytes!(
             "../assets/fonts/IBMPlexMono-Regular.ttf"
@@ -91,6 +97,7 @@ pub fn font_definitions() -> FontDefinitions {
         vec![
             "IBMPlexSans-Regular".to_owned(),
             "IBMPlexSansJP-Regular".to_owned(),
+            "IBMPlexMath-Regular".to_owned(),
             "NotoEmoji-Regular".to_owned(),
             "emoji-icon-font".to_owned(),
         ],
@@ -100,6 +107,7 @@ pub fn font_definitions() -> FontDefinitions {
         vec![
             "IBMPlexSans-Thin".to_owned(),
             "IBMPlexSansJP-Thin".to_owned(),
+            "IBMPlexMath-Regular".to_owned(),
             "NotoEmoji-Light".to_owned(),
             "emoji-icon-font".to_owned(),
         ],
@@ -109,6 +117,7 @@ pub fn font_definitions() -> FontDefinitions {
         vec![
             "IBMPlexSans-Bold".to_owned(),
             "IBMPlexSansJP-Bold".to_owned(),
+            "IBMPlexMath-Regular".to_owned(),
             "NotoEmoji-Bold".to_owned(),
             "emoji-icon-font".to_owned(),
         ],
@@ -117,6 +126,7 @@ pub fn font_definitions() -> FontDefinitions {
         FontFamily::Name("proportional-italic".into()),
         vec![
             "IBMPlexSans-Italic".to_owned(),
+            "IBMPlexMath-Regular".to_owned(),
             "NotoEmoji-Regular".to_owned(),
             "emoji-icon-font".to_owned(),
         ],
@@ -127,6 +137,7 @@ pub fn font_definitions() -> FontDefinitions {
             "IBMPlexMono-Regular".to_owned(),
             "IBMPlexSans-Regular".to_owned(),
             "IBMPlexSansJP-Regular".to_owned(),
+            "IBMPlexMath-Regular".to_owned(),
             "NotoEmoji-Regular".to_owned(),
             "emoji-icon-font".to_owned(),
         ],

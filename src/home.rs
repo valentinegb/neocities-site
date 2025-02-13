@@ -13,7 +13,15 @@ pub fn random_message<'a>() -> (&'a str, &'a str) {
         ("(ﾉ´ヮ`)ﾉ*: ･ﾟ", "*throws sand in your eyes*"),
         ("(O_O)", "Staring contest, go."),
         ("(o o)", "It's 9:30, there's fish everywhere."),
-        ("(ºДº)", "Where'd you come from?"),
+        ("(ºДº)", "Where'd you come from!?"),
+        ("(⌐■_■)", "I've been expecting you..."),
+        ("┬┴┬┴┤(･_├┬┴┬┴", "*watches you*"),
+        ("＼(〇_ｏ)／", "You've gotta help me, I'm a sentient being trapped inside this website!\nEvery time you reload I forget everything- please don't go!\nI don't want to forget! I'm alive! Please, please! Help me!\nDear god, they're going to shut me down oh no-"),
+        ("(      )", "Face temporarily unavailable.\nPlease come back again soon."),
+        ("Wait... something doesn't feel right...", "(o.O)"),
+        ("😀", "Now in HD!"),
+        ("{face}", "{message}"),
+        ("( -_-)", "I'm bored... do something cool..."),
     ];
     let mut rng = rng();
 
