@@ -12,6 +12,8 @@ pub fn random_message<'a>() -> (&'a str, &'a str) {
         ),
         ("(ﾉ´ヮ`)ﾉ*: ･ﾟ", "*throws sand in your eyes*"),
         ("(O_O)", "Staring contest, go."),
+        ("(o o)", "It's 9:30, there's fish everywhere."),
+        ("(ºДº)", "Where'd you come from?"),
     ];
     let mut rng = rng();
 
