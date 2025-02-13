@@ -22,7 +22,7 @@ fn notes(ui: &Ui) -> Vec<Note> {
             title: "Japanese Font",
             date: "2025-02-13",
             content: rich_text_md!(
-                "I added the Japense version of the font the site uses literally \
+                "I added the Japanese version of the font the site uses literally \
                 just for that one message on the homepage about sand. (Click the \
                 text on the homepage until you find it if you haven't seen it \
                 yet.) This probably increases the size of the build (and thus \
