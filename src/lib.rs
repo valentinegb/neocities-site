@@ -1,4 +1,6 @@
 mod fonts;
+mod home;
+mod void;
 mod windows;
 
 use build_timestamp::build_timestamp;
@@ -11,32 +13,48 @@ use egui::{
 use fonts::{font_definitions, RichTextExt as _};
 use rich_text_md::rich_text_md;
 
-pub struct NeocitiesSiteApp {
+#[derive(PartialEq)]
+enum Tab {
+    Home,
+    TheVoid,
+}
+
+pub struct NeocitiesSiteApp<'a> {
+    tab: Tab,
+    home_message: (&'a str, &'a str),
     about_window_open: bool,
     fonts_window_open: bool,
 }
 
-impl NeocitiesSiteApp {
-    pub fn new(cc: &CreationContext) -> Self {
+impl NeocitiesSiteApp<'_> {
+    pub fn new(cc: &CreationContext<'_>) -> Self {
         cc.egui_ctx.set_fonts(font_definitions());
 
         Self::default()
     }
 }
 
-impl Default for NeocitiesSiteApp {
+impl Default for NeocitiesSiteApp<'_> {
     fn default() -> Self {
         Self {
-            about_window_open: true,
+            tab: Tab::Home,
+            home_message: home::random_message(),
+            about_window_open: false,
             fonts_window_open: false,
         }
     }
 }
 
-impl App for NeocitiesSiteApp {
+impl App for NeocitiesSiteApp<'_> {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         windows::about::show(&mut self.about_window_open, ctx);
         windows::fonts::show(&mut self.fonts_window_open, ctx);
+        TopBottomPanel::top("navbar").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.selectable_value(&mut self.tab, Tab::Home, "Valentine's Site");
+                ui.selectable_value(&mut self.tab, Tab::TheVoid, "The Void");
+            });
+        });
         TopBottomPanel::bottom("footer").show(ctx, |ui| {
             ui.columns_const(|[col_1, col_2, col_3]| {
                 col_1.horizontal_wrapped(|ui| {
@@ -59,7 +77,14 @@ impl App for NeocitiesSiteApp {
                 });
             });
         });
-        CentralPanel::default().show(ctx, |_ui| ());
+        CentralPanel::default().show(ctx, |ui| match self.tab {
+            Tab::Home => {
+                home::show(ui, &mut self.home_message);
+            }
+            Tab::TheVoid => {
+                void::show(ui);
+            }
+        });
     }
 }
 
