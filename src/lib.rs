@@ -64,17 +64,20 @@ impl App for NeocitiesSiteApp<'_> {
                     warn_if_debug_build(ui);
                 });
                 col_2.centered_and_justified(made_with_love_and_rust);
-                col_3.with_layout(Layout::right_to_left(Align::Center), |ui| {
-                    ui.toggle_value(&mut self.about_window_open, "About");
-                    ui.toggle_value(&mut self.fonts_window_open, "Fonts");
-                    ui.add(
-                        Hyperlink::from_label_and_url(
-                            "Source Code",
-                            "https://github.com/valentinegb/neocities-site",
-                        )
-                        .open_in_new_tab(true),
-                    );
-                });
+                col_3.with_layout(
+                    Layout::right_to_left(Align::Min).with_main_wrap(true),
+                    |ui| {
+                        ui.toggle_value(&mut self.about_window_open, "About");
+                        ui.toggle_value(&mut self.fonts_window_open, "Fonts");
+                        ui.add(
+                            Hyperlink::from_label_and_url(
+                                "Source Code",
+                                "https://github.com/valentinegb/neocities-site",
+                            )
+                            .open_in_new_tab(true),
+                        );
+                    },
+                );
             });
         });
         CentralPanel::default().show(ctx, |ui| match self.tab {
