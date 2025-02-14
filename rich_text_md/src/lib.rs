@@ -42,6 +42,9 @@ pub fn rich_text_md(item: TokenStream) -> TokenStream {
 
                 output += ".append_to(&mut layout_job, ui.style(), egui::FontSelection::Default, egui::Align::Center);";
             }
+            Event::Code(text) => {
+                output += &format!("\negui::RichText::new(format!({:?})).code().append_to(&mut layout_job, ui.style(), egui::FontSelection::Default, egui::Align::Center);", &*text);
+            }
             _ => (),
         }
     }

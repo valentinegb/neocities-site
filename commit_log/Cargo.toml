@@ -1,0 +1,11 @@
+[package]
+name = "commit_log"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+proc-macro = true
+
+[dependencies]
+git2 = { version = "0.20.0", default-features = false }

@@ -1,5 +1,6 @@
 use egui::Ui;
 
+mod commit_log;
 mod home;
 mod void;
 
@@ -8,6 +9,7 @@ mod void;
 pub enum Tab<'a> {
     Home { message: (&'a str, &'a str) },
     TheVoid,
+    CommitLog,
 }
 
 impl PartialEq for Tab<'_> {
@@ -23,6 +25,7 @@ impl From<u8> for Tab<'_> {
                 message: home::random_message(),
             },
             1 => Tab::TheVoid,
+            2 => Tab::CommitLog,
             _ => unreachable!(),
         }
     }
@@ -39,6 +42,7 @@ impl Tab<'_> {
         match *discriminant {
             0 => "Valentine's Site",
             1 => "The Void",
+            2 => "Commit Log",
             _ => unreachable!(),
         }
     }
@@ -48,7 +52,7 @@ impl Tab<'_> {
     }
 
     pub fn all_nav_buttons(&mut self, ui: &mut Ui) {
-        for discriminant in 0..=1 {
+        for discriminant in 0..=2 {
             if ui
                 .selectable_label(
                     self.discriminant() == discriminant,
@@ -65,6 +69,7 @@ impl Tab<'_> {
         match self {
             Tab::Home { message } => home::show(ui, message),
             Tab::TheVoid => void::show(ui),
+            Tab::CommitLog => commit_log::show(ui),
         }
     }
 }
