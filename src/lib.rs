@@ -1,6 +1,5 @@
 mod fonts;
-mod home;
-mod void;
+mod tabs;
 mod windows;
 
 use build_timestamp::build_timestamp;
@@ -12,16 +11,11 @@ use egui::{
 };
 use fonts::{font_definitions, RichTextExt as _};
 use rich_text_md::rich_text_md;
+use tabs::Tab;
 
-#[derive(PartialEq)]
-enum Tab {
-    Home,
-    TheVoid,
-}
-
+#[derive(Default)]
 pub struct NeocitiesSiteApp<'a> {
-    tab: Tab,
-    home_message: (&'a str, &'a str),
+    tab: Tab<'a>,
     about_window_open: bool,
     fonts_window_open: bool,
 }
@@ -34,25 +28,13 @@ impl NeocitiesSiteApp<'_> {
     }
 }
 
-impl Default for NeocitiesSiteApp<'_> {
-    fn default() -> Self {
-        Self {
-            tab: Tab::Home,
-            home_message: home::random_message(),
-            about_window_open: false,
-            fonts_window_open: false,
-        }
-    }
-}
-
 impl App for NeocitiesSiteApp<'_> {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         windows::about::show(&mut self.about_window_open, ctx);
         windows::fonts::show(&mut self.fonts_window_open, ctx);
         TopBottomPanel::top("navbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
-                ui.selectable_value(&mut self.tab, Tab::Home, "Valentine's Site");
-                ui.selectable_value(&mut self.tab, Tab::TheVoid, "The Void");
+                self.tab.all_nav_buttons(ui);
             });
         });
         TopBottomPanel::bottom("footer").show(ctx, |ui| {
@@ -80,14 +62,7 @@ impl App for NeocitiesSiteApp<'_> {
                 );
             });
         });
-        CentralPanel::default().show(ctx, |ui| match self.tab {
-            Tab::Home => {
-                home::show(ui, &mut self.home_message);
-            }
-            Tab::TheVoid => {
-                void::show(ui);
-            }
-        });
+        CentralPanel::default().show(ctx, |ui| self.tab.show(ui));
     }
 }
 
