@@ -4,6 +4,9 @@ on:
     branches:
       - main
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   deploy:
     name: Deploy
