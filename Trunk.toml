@@ -3,15 +3,4 @@ no_sri = true
 
 [[hooks]]
 stage = "post_build"
-command = "./rename_wasm.sh"
-
-[[hooks]]
-stage = "post_build"
-command = "sed"
-command_arguments = [
-    "-i",
-    "",
-    "-e",
-    "s/_bg.wasm/_bg.txt/g",
-    "dist/.stage/index.html",
-]
+command = "./post_build.sh"
