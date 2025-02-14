@@ -34,6 +34,18 @@ fn notes(ui: &Ui) -> Vec<Note> {
                 it'll be more worth it later."
             ),
         },
+        Note {
+            title: "Valentine's Day",
+            date: "2025-02-14",
+            content: rich_text_md!(
+                "Happy Valentine's Day!\n\nSo, my name *is* actually Valentine. \
+                But, funnily enough, I was born on a different saint's holiday. \
+                Every year I get comments about how it's \"my day\", but it \
+                stopped being something I cared about when people stopped giving \
+                me free candy. This year though, I do have some plans with \
+                somebody, which I'm pretty excited for. :)"
+            ),
+        },
     ]
 }
 
