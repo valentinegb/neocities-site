@@ -17,7 +17,7 @@ pub fn commits(_item: TokenStream) -> TokenStream {
             commit.time().seconds(),
             commit.summary().unwrap(),
             match commit.body() {
-                Some(body) => format!("Some(CommitBody {{ text: rich_text_md::rich_text_md!({body:?}), shown: false }})"),
+                Some(body) => format!("Some(CommitBody {{ text: {body:?}, shown: false }})"),
                 None => "None".to_string(),
             },
         );

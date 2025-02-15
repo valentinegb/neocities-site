@@ -9,7 +9,7 @@ mod void;
 pub enum Tab<'a> {
     Home(Option<home::TabData<'a>>),
     TheVoid,
-    CommitLog(Option<commit_log::TabData>),
+    CommitLog(Option<commit_log::TabData<'a>>),
 }
 
 impl PartialEq for Tab<'_> {

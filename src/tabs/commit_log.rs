@@ -1,24 +1,24 @@
 use chrono::{DateTime, Utc};
 use commit_log::commits;
-use egui::{text::LayoutJob, ScrollArea, TextStyle, Ui};
+use egui::{text::LayoutJob, RichText, ScrollArea, TextStyle, Ui};
 use rich_text_md::rich_text_md;
 
 #[derive(Clone)]
-struct CommitBody {
-    text: LayoutJob,
+struct CommitBody<'a> {
+    text: &'a str,
     shown: bool,
 }
 
 #[derive(Clone)]
-struct Commit {
+struct Commit<'a> {
     date_time: DateTime<Utc>,
     summary: LayoutJob,
-    body: Option<CommitBody>,
+    body: Option<CommitBody<'a>>,
 }
 
 #[derive(Clone)]
-pub struct TabData {
-    commits: Vec<Commit>,
+pub struct TabData<'a> {
+    commits: Vec<Commit<'a>>,
 }
 
 pub fn show(ui: &mut Ui, tab_data: &mut Option<TabData>) {
@@ -55,7 +55,7 @@ pub fn show(ui: &mut Ui, tab_data: &mut Option<TabData>) {
 
                         if let Some(CommitBody { text, shown }) = body {
                             if *shown {
-                                ui.label(text.clone());
+                                ui.label(RichText::new(*text).monospace());
                             }
                         }
                     });
