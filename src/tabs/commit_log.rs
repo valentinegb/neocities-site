@@ -49,7 +49,7 @@ pub fn show(ui: &mut Ui, tab_data: &mut Option<TabData>) {
                             ui.label(summary.clone());
 
                             if let Some(CommitBody { text: _, shown }) = body {
-                                ui.toggle_value(shown, "...");
+                                ui.toggle_value(shown, "…");
                             }
                         });
 
