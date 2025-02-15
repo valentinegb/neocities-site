@@ -7,9 +7,9 @@ mod void;
 #[derive(Clone)]
 #[repr(u8)]
 pub enum Tab<'a> {
-    Home { message: (&'a str, &'a str) },
+    Home(Option<home::TabData<'a>>),
     TheVoid,
-    CommitLog,
+    CommitLog(Option<commit_log::TabData>),
 }
 
 impl PartialEq for Tab<'_> {
@@ -21,11 +21,9 @@ impl PartialEq for Tab<'_> {
 impl From<u8> for Tab<'_> {
     fn from(value: u8) -> Self {
         match value {
-            0 => Tab::Home {
-                message: home::random_message(),
-            },
+            0 => Tab::Home(None),
             1 => Tab::TheVoid,
-            2 => Tab::CommitLog,
+            2 => Tab::CommitLog(None),
             _ => unreachable!(),
         }
     }
@@ -67,9 +65,9 @@ impl Tab<'_> {
 
     pub fn show(&mut self, ui: &mut Ui) {
         match self {
-            Tab::Home { message } => home::show(ui, message),
+            Tab::Home(tab_data) => home::show(ui, tab_data),
             Tab::TheVoid => void::show(ui),
-            Tab::CommitLog => commit_log::show(ui),
+            Tab::CommitLog(tab_data) => commit_log::show(ui, tab_data),
         }
     }
 }

@@ -1,6 +1,11 @@
 use egui::{text::LayoutJob, Align, FontSelection, RichText, Sense, Ui};
 use rand::{rng, seq::IndexedRandom as _};
 
+#[derive(Clone)]
+pub struct TabData<'a> {
+    message: (&'a str, &'a str),
+}
+
 pub fn random_message<'a>() -> (&'a str, &'a str) {
     let home_messages = [
         ("(^_^)", "The quick brown fox jumped over the lazy dog."),
@@ -28,17 +33,25 @@ pub fn random_message<'a>() -> (&'a str, &'a str) {
     *home_messages.choose(&mut rng).unwrap()
 }
 
-pub fn show(ui: &mut Ui, home_message: &mut (&str, &str)) {
+pub fn show(ui: &mut Ui, tab_data: &mut Option<TabData>) {
+    if tab_data.is_none() {
+        *tab_data = Some(TabData {
+            message: random_message(),
+        })
+    }
+
+    let TabData { message } = tab_data.as_mut().unwrap();
+
     ui.centered_and_justified(|ui| {
         let mut layout_job = LayoutJob::default();
 
-        RichText::new(home_message.0).weak().size(48.0).append_to(
+        RichText::new(message.0).weak().size(48.0).append_to(
             &mut layout_job,
             ui.style(),
             FontSelection::Default,
             Align::Center,
         );
-        RichText::new(format!("\n\n{}", home_message.1))
+        RichText::new(format!("\n\n{}", message.1))
             .weak()
             .size(24.0)
             .append_to(
@@ -56,7 +69,7 @@ pub fn show(ui: &mut Ui, home_message: &mut (&str, &str)) {
             )
             .clicked()
         {
-            *home_message = random_message();
+            *message = random_message()
         }
     });
 }

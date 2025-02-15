@@ -13,9 +13,13 @@ pub fn commits(_item: TokenStream) -> TokenStream {
         let commit = repository.find_commit(oid.unwrap()).unwrap();
 
         output += &format!(
-            "(chrono::DateTime::from_timestamp({}, 0).unwrap(), rich_text_md::rich_text_md!({:?})),",
+            "Commit {{ date_time: chrono::DateTime::from_timestamp({}, 0).unwrap(), summary: rich_text_md::rich_text_md!({:?}), body: {} }},",
             commit.time().seconds(),
-            commit.message().unwrap(),
+            commit.summary().unwrap(),
+            match commit.body() {
+                Some(body) => format!("Some(CommitBody {{ text: rich_text_md::rich_text_md!({body:?}), shown: false }})"),
+                None => "None".to_string(),
+            },
         );
     }
 
