@@ -1,5 +1,6 @@
 use std::{io::BufReader, ops::Deref, sync::Arc};
 
+use base64::{prelude::BASE64_STANDARD, Engine};
 use egui::{
     cache::{ComputerMut, FrameCache},
     mutex::Mutex,
@@ -106,7 +107,10 @@ impl<'a> MusicWindow<'a> {
                     let data = data.clone();
 
                     move |response| match response {
-                        Ok(response) => *data[index].lock() = Some(response.bytes),
+                        Ok(response) => match BASE64_STANDARD.decode(response.bytes) {
+                            Ok(bytes) => *data[index].lock() = Some(bytes),
+                            Err(err) => error!("Could not decode audio for song {song:?}: {err}"),
+                        },
                         Err(err) => error!("Failed to fetch audio for song {song:?}: {err}"),
                     }
                 },

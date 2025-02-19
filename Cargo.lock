@@ -1415,6 +1415,7 @@ name = "neocities_site"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64",
  "build_timestamp",
  "chrono",
  "commit_log",
