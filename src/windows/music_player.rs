@@ -5,7 +5,7 @@ use eframe::CreationContext;
 use egui::{
     cache::{ComputerMut, FrameCache},
     mutex::Mutex,
-    Align2, InnerResponse, ProgressBar, RichText,
+    Align2, Image, InnerResponse, ProgressBar, RichText,
 };
 use ehttp::fetch;
 use log::error;
@@ -186,10 +186,13 @@ impl<'a> MusicPlayerWindow<'a> {
                 ui.vertical_centered(|ui| {
                     let current_song = self.queue[self.position];
 
-                    ui.image(format!(
-                        "{}/assets/music/{current_song}/artwork.jpg",
-                        self.origin,
-                    ));
+                    ui.add(
+                        Image::new(format!(
+                            "{}/assets/music/{current_song}/artwork.jpg",
+                            self.origin,
+                        ))
+                        .corner_radius(3),
+                    );
 
                     let default_song_info = SongInfo {
                         name: "Unknown Song".to_string(),
