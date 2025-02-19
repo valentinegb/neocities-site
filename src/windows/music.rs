@@ -1,15 +1,15 @@
-use std::{io::BufReader, ops::Deref, sync::Arc};
+use std::{io::BufReader, ops::Deref, sync::Arc, time::Duration};
 
 use base64::{prelude::BASE64_STANDARD, Engine};
 use egui::{
     cache::{ComputerMut, FrameCache},
     mutex::Mutex,
-    Align, Align2, InnerResponse,
+    Align, Align2, InnerResponse, ProgressBar,
 };
 use ehttp::fetch;
-use log::{debug, error};
+use log::error;
 use rand::{rng, seq::SliceRandom};
-use rodio::OutputStream;
+use rodio::{OutputStream, Source};
 
 use crate::fonts::UiExt as _;
 
@@ -74,6 +74,7 @@ pub struct MusicWindow<'a> {
     prev_sink_len: usize,
     position: usize,
     origin: String,
+    total_durations: Vec<Option<Duration>>,
 }
 
 impl<'a> MusicWindow<'a> {
@@ -126,33 +127,26 @@ impl<'a> MusicWindow<'a> {
             prev_sink_len: 0,
             position: 0,
             origin,
+            total_durations: vec![None; data.len()],
         })
     }
 
     pub fn show(&mut self, ctx: &egui::Context) -> Option<InnerResponse<Option<()>>> {
         if let Some(sink) = self.sink.as_ref() {
             if sink.len() != self.prev_sink_len {
-                debug!("Sink length changed!");
-
                 self.position += 1;
 
                 if self.position >= self.queue.len() {
                     self.position -= self.queue.len();
                     self.data_appended = vec![false; self.data.len()];
-
-                    debug!("Reached end of queue, signaled to re-append queue");
                 }
 
                 self.prev_sink_len = sink.len();
             }
 
             if self.data_appended.contains(&false) {
-                debug!("There is data that needs to be appended");
-
                 for (i, data) in self.data.clone().into_iter().enumerate() {
                     if self.data_appended[i] {
-                        debug!("Data already appended for index {i}");
-
                         continue;
                     } else if let Some(data) = data.lock().deref() {
                         let reader = BufReader::new(std::io::Cursor::new(data.clone()));
@@ -160,12 +154,12 @@ impl<'a> MusicWindow<'a> {
 
                         match source {
                             Ok(source) => {
+                                self.total_durations[i] = source.total_duration();
+
                                 sink.append(source);
 
                                 self.data_appended[i] = true;
                                 self.prev_sink_len = sink.len();
-
-                                debug!("Appended data with index of {i}");
                             }
                             Err(err) => {
                                 error!("Failed to decode audio data: {err}");
@@ -174,8 +168,6 @@ impl<'a> MusicWindow<'a> {
                             }
                         }
                     } else {
-                        debug!("Data not ready for index {i}");
-
                         break;
                     }
                 }
@@ -215,7 +207,20 @@ impl<'a> MusicWindow<'a> {
                         egui::Label::new(format!("{} — {}", song_info.artist, song_info.album))
                             .truncate(),
                     );
-
+                    ui.add(
+                        ProgressBar::new(
+                            self.sink
+                                .as_ref()
+                                .and_then(|sink| {
+                                    self.total_durations[self.position].map(|total_duration| {
+                                        sink.get_pos().div_duration_f32(total_duration)
+                                    })
+                                })
+                                .unwrap_or(0.0),
+                        )
+                        .desired_height(10.0),
+                    );
+                    ctx.request_repaint();
                     ui.columns_const(|[col_1, col_2]| {
                         col_1.with_layout(egui::Layout::top_down(Align::RIGHT), |ui| {
                             if self.sink.as_ref().map_or(true, |sink| sink.is_paused()) {
