@@ -9,22 +9,30 @@ use egui::{
     text::LayoutJob, warn_if_debug_build, Align, CentralPanel, Color32, FontSelection, Hyperlink,
     Layout, Response, RichText, TopBottomPanel, Ui,
 };
+use egui_extras::install_image_loaders;
 use fonts::{font_definitions, RichTextExt as _};
 use rich_text_md::rich_text_md;
 use tabs::Tab;
+use windows::music::MusicWindow;
 
-#[derive(Default)]
 pub struct NeocitiesSiteApp<'a> {
+    music_window: MusicWindow<'a>,
     tab: Tab<'a>,
     about_window_open: bool,
     fonts_window_open: bool,
 }
 
 impl NeocitiesSiteApp<'_> {
-    pub fn new(cc: &CreationContext<'_>) -> Self {
+    pub fn new(cc: &CreationContext<'_>) -> anyhow::Result<Self> {
         cc.egui_ctx.set_fonts(font_definitions());
+        install_image_loaders(&cc.egui_ctx);
 
-        Self::default()
+        Ok(Self {
+            music_window: MusicWindow::new(cc.integration_info.web_info.location.origin.clone())?,
+            tab: Tab::default(),
+            about_window_open: false,
+            fonts_window_open: false,
+        })
     }
 }
 
@@ -32,6 +40,7 @@ impl App for NeocitiesSiteApp<'_> {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         windows::about::show(&mut self.about_window_open, ctx);
         windows::fonts::show(&mut self.fonts_window_open, ctx);
+        self.music_window.show(ctx);
         TopBottomPanel::top("navbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 self.tab.all_nav_buttons(ui);

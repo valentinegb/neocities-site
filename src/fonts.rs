@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use egui::{FontData, FontDefinitions, FontFamily, RichText};
+use egui::{FontData, FontDefinitions, FontFamily, RichText, Ui, Widget};
 
 pub trait RichTextExt {
     fn proportional_thin(self) -> Self;
@@ -17,6 +17,26 @@ impl RichTextExt for RichText {
     }
     fn proportional_italics(self) -> Self {
         self.family(FontFamily::Name("proportional-italic".into()))
+    }
+}
+
+pub trait UiExt {
+    fn proportional_thin(&mut self, text: impl Into<RichText>) -> egui::Response;
+    fn proportional_bold(&mut self, text: impl Into<RichText>) -> egui::Response;
+    fn proportional_italics(&mut self, text: impl Into<RichText>) -> egui::Response;
+}
+
+impl UiExt for Ui {
+    fn proportional_thin(&mut self, text: impl Into<RichText>) -> egui::Response {
+        egui::Label::new(text.into().proportional_thin()).ui(self)
+    }
+
+    fn proportional_bold(&mut self, text: impl Into<RichText>) -> egui::Response {
+        egui::Label::new(text.into().proportional_bold()).ui(self)
+    }
+
+    fn proportional_italics(&mut self, text: impl Into<RichText>) -> egui::Response {
+        egui::Label::new(text.into().proportional_italics()).ui(self)
     }
 }
 
