@@ -1,6 +1,7 @@
 use std::{io::BufReader, ops::Deref, sync::Arc, time::Duration};
 
 use base64::{prelude::BASE64_STANDARD, Engine};
+use eframe::CreationContext;
 use egui::{
     cache::{ComputerMut, FrameCache},
     mutex::Mutex,
@@ -75,10 +76,11 @@ pub struct MusicPlayerWindow<'a> {
     position: usize,
     origin: String,
     total_durations: Vec<Option<Duration>>,
+    is_mobile: bool,
 }
 
 impl<'a> MusicPlayerWindow<'a> {
-    pub fn new(origin: String) -> anyhow::Result<MusicPlayerWindow<'a>> {
+    pub fn new(cc: &CreationContext<'_>) -> anyhow::Result<MusicPlayerWindow<'a>> {
         let mut queue = vec![
             "20190724",
             "about-10-hours-of-making-breakcore",
@@ -126,8 +128,9 @@ impl<'a> MusicPlayerWindow<'a> {
             data_appended: vec![false; data.len()],
             prev_sink_len: 0,
             position: 0,
-            origin,
+            origin: cc.integration_info.web_info.location.origin.clone(),
             total_durations: vec![None; data.len()],
+            is_mobile: cc.integration_info.web_info.user_agent.contains("Mobile"),
         })
     }
 
@@ -178,6 +181,7 @@ impl<'a> MusicPlayerWindow<'a> {
             .max_width(200.0)
             .pivot(Align2::RIGHT_TOP)
             .default_pos((ctx.screen_rect().width() - 20.0, 45.0))
+            .default_open(!self.is_mobile)
             .show(ctx, |ui| {
                 ui.vertical_centered(|ui| {
                     let current_song = self.queue[self.position];

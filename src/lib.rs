@@ -28,9 +28,7 @@ impl NeocitiesSiteApp<'_> {
         install_image_loaders(&cc.egui_ctx);
 
         Ok(Self {
-            music_window: MusicPlayerWindow::new(
-                cc.integration_info.web_info.location.origin.clone(),
-            )?,
+            music_window: MusicPlayerWindow::new(cc)?,
             tab: Tab::default(),
             about_window_open: false,
             fonts_window_open: false,
