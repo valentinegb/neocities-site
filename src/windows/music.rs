@@ -101,7 +101,7 @@ impl<'a> MusicWindow<'a> {
 
         for (index, song) in queue.clone().into_iter().enumerate() {
             fetch(
-                ehttp::Request::get(format!("/assets/music/{song}/audio")),
+                ehttp::Request::get(format!("/assets/music/{song}/audio.txt")),
                 {
                     let data = data.clone();
 
