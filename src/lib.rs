@@ -13,10 +13,10 @@ use egui_extras::install_image_loaders;
 use fonts::{font_definitions, RichTextExt as _};
 use rich_text_md::rich_text_md;
 use tabs::Tab;
-use windows::music::MusicWindow;
+use windows::music_player::MusicPlayerWindow;
 
 pub struct NeocitiesSiteApp<'a> {
-    music_window: MusicWindow<'a>,
+    music_window: MusicPlayerWindow<'a>,
     tab: Tab<'a>,
     about_window_open: bool,
     fonts_window_open: bool,
@@ -28,7 +28,9 @@ impl NeocitiesSiteApp<'_> {
         install_image_loaders(&cc.egui_ctx);
 
         Ok(Self {
-            music_window: MusicWindow::new(cc.integration_info.web_info.location.origin.clone())?,
+            music_window: MusicPlayerWindow::new(
+                cc.integration_info.web_info.location.origin.clone(),
+            )?,
             tab: Tab::default(),
             about_window_open: false,
             fonts_window_open: false,

@@ -1,3 +1,3 @@
 pub mod about;
 pub mod fonts;
-pub mod music;
+pub mod music_player;

@@ -4,14 +4,14 @@ use base64::{prelude::BASE64_STANDARD, Engine};
 use egui::{
     cache::{ComputerMut, FrameCache},
     mutex::Mutex,
-    Align, Align2, InnerResponse, ProgressBar,
+    Align2, InnerResponse, ProgressBar, RichText,
 };
 use ehttp::fetch;
 use log::error;
 use rand::{rng, seq::SliceRandom};
 use rodio::{OutputStream, Source};
 
-use crate::fonts::UiExt as _;
+use crate::fonts::RichTextExt;
 
 #[derive(Default)]
 struct SongInfo {
@@ -65,7 +65,7 @@ impl ComputerMut<&str, Arc<Mutex<Option<SongInfo>>>> for SongInfo {
     }
 }
 
-pub struct MusicWindow<'a> {
+pub struct MusicPlayerWindow<'a> {
     queue: Vec<&'a str>,
     stream: Option<OutputStream>,
     sink: Option<rodio::Sink>,
@@ -77,8 +77,8 @@ pub struct MusicWindow<'a> {
     total_durations: Vec<Option<Duration>>,
 }
 
-impl<'a> MusicWindow<'a> {
-    pub fn new(origin: String) -> anyhow::Result<MusicWindow<'a>> {
+impl<'a> MusicPlayerWindow<'a> {
+    pub fn new(origin: String) -> anyhow::Result<MusicPlayerWindow<'a>> {
         let mut queue = vec![
             "20190724",
             "about-10-hours-of-making-breakcore",
@@ -174,9 +174,8 @@ impl<'a> MusicWindow<'a> {
             }
         }
 
-        egui::Window::new("Music")
-            .default_width(200.0)
-            .max_width(600.0)
+        egui::Window::new("🎶 Music Player")
+            .max_width(200.0)
             .pivot(Align2::RIGHT_TOP)
             .default_pos((ctx.screen_rect().width() - 20.0, 45.0))
             .show(ctx, |ui| {
@@ -202,7 +201,10 @@ impl<'a> MusicWindow<'a> {
                     let song_info = song_info.lock();
                     let song_info = song_info.as_ref().unwrap_or(&default_song_info);
 
-                    ui.proportional_bold(song_info.name.clone());
+                    ui.add(
+                        egui::Label::new(RichText::new(song_info.name.clone()).proportional_bold())
+                            .truncate(),
+                    );
                     ui.add(
                         egui::Label::new(format!("{} — {}", song_info.artist, song_info.album))
                             .truncate(),
@@ -218,11 +220,11 @@ impl<'a> MusicWindow<'a> {
                                 })
                                 .unwrap_or(0.0),
                         )
-                        .desired_height(10.0),
+                        .desired_height(5.0),
                     );
                     ctx.request_repaint();
                     ui.columns_const(|[col_1, col_2]| {
-                        col_1.with_layout(egui::Layout::top_down(Align::RIGHT), |ui| {
+                        col_1.vertical_centered_justified(|ui| {
                             if self.sink.as_ref().map_or(true, |sink| sink.is_paused()) {
                                 if ui.button("⏵").clicked() {
                                     match self.sink.as_ref() {
@@ -248,7 +250,7 @@ impl<'a> MusicWindow<'a> {
                                 }
                             }
                         });
-                        col_2.with_layout(egui::Layout::top_down(Align::LEFT), |ui| {
+                        col_2.vertical_centered_justified(|ui| {
                             if self.sink.is_none() {
                                 ui.disable();
                             }
