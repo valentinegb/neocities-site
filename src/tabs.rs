@@ -1,4 +1,7 @@
+use commit_log::CommitLogTab;
 use egui::Ui;
+use home::HomeTab;
+use void::TheVoidTab;
 
 mod commit_log;
 mod home;
@@ -7,9 +10,9 @@ mod void;
 #[derive(Clone)]
 #[repr(u8)]
 pub enum Tab<'a> {
-    Home(Option<home::TabData<'a>>),
+    Home(Option<HomeTab<'a>>),
     TheVoid,
-    CommitLog(Option<commit_log::TabData<'a>>),
+    CommitLog(Option<CommitLogTab<'a>>),
 }
 
 impl PartialEq for Tab<'_> {
@@ -65,9 +68,11 @@ impl Tab<'_> {
 
     pub fn show(&mut self, ui: &mut Ui) {
         match self {
-            Tab::Home(tab_data) => home::show(ui, tab_data),
-            Tab::TheVoid => void::show(ui),
-            Tab::CommitLog(tab_data) => commit_log::show(ui, tab_data),
+            Tab::Home(home_tab) => home_tab.get_or_insert_default().ui(ui),
+            Tab::TheVoid => TheVoidTab::ui(ui),
+            Tab::CommitLog(commit_log_tab) => commit_log_tab
+                .get_or_insert_with(|| CommitLogTab::new(ui))
+                .ui(ui),
         }
     }
 }

@@ -13,13 +13,13 @@ use egui_extras::install_image_loaders;
 use fonts::{font_definitions, RichTextExt as _};
 use rich_text_md::rich_text_md;
 use tabs::Tab;
-use windows::music_player::MusicPlayerWindow;
+use windows::{about::AboutWindow, fonts::FontsWindow, music_player::MusicPlayerWindow};
 
 pub struct NeocitiesSiteApp<'a> {
-    music_window: MusicPlayerWindow<'a>,
     tab: Tab<'a>,
-    about_window_open: bool,
-    fonts_window_open: bool,
+    music_player_window: MusicPlayerWindow<'a>,
+    about_window: AboutWindow,
+    fonts_window: FontsWindow,
 }
 
 impl NeocitiesSiteApp<'_> {
@@ -28,19 +28,19 @@ impl NeocitiesSiteApp<'_> {
         install_image_loaders(&cc.egui_ctx);
 
         Ok(Self {
-            music_window: MusicPlayerWindow::new(cc)?,
             tab: Tab::default(),
-            about_window_open: false,
-            fonts_window_open: false,
+            music_player_window: MusicPlayerWindow::new(cc)?,
+            about_window: AboutWindow::new(),
+            fonts_window: FontsWindow::new(),
         })
     }
 }
 
 impl App for NeocitiesSiteApp<'_> {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        windows::about::show(&mut self.about_window_open, ctx);
-        windows::fonts::show(&mut self.fonts_window_open, ctx);
-        self.music_window.show(ctx);
+        self.about_window.show(ctx);
+        self.fonts_window.show(ctx);
+        self.music_player_window.show(ctx);
         TopBottomPanel::top("navbar").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 self.tab.all_nav_buttons(ui);
@@ -58,8 +58,8 @@ impl App for NeocitiesSiteApp<'_> {
                 col_3.with_layout(
                     Layout::right_to_left(Align::Min).with_main_wrap(true),
                     |ui| {
-                        ui.toggle_value(&mut self.about_window_open, "About");
-                        ui.toggle_value(&mut self.fonts_window_open, "Fonts");
+                        ui.toggle_value(&mut self.about_window.open, "About");
+                        ui.toggle_value(&mut self.fonts_window.open, "Fonts");
                         ui.add(
                             Hyperlink::from_label_and_url(
                                 "Source Code",
