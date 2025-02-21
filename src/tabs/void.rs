@@ -63,6 +63,18 @@ impl TheVoidTab {
                     I'll think of something soon."
                 ),
             },
+            Note {
+                title: "eOS",
+                date: "2025-02-21",
+                content: rich_text_md!(
+                    "I've figured out what to work on next. It's a complete \
+                    rewrite of the site I'm calling \"eOS\". The idea is to make \
+                    a site that looks like a desktop environment. It's not \
+                    nearly ready yet, so I'm making this note to let you know \
+                    what I'm working on, but when it is, everything's that on \
+                    this site now will likely be gone."
+                ),
+            },
         ]
     }
 
